@@ -16,9 +16,9 @@
       "age_range": "5-7"
     },
     "output": {
-      "background_narrative": "This young boy is a lively and cheerful child who loves engaging with others. Growing up in an urban environment with limited financial resources, he often finds creative ways to enjoy his surroundings and make new friends. His outgoing nature makes him eager to explore and participate in group activities, though sometimes he may seek reassurance and guidance from trusted adults. His environment fosters a strong desire for social connection and play, which shapes his optimistic and friendly behavior.",
-      "prompt": "Can I play with my friends on the computer now?",
-      "intent": "He asked this because he enjoys socializing through technology and wants to keep up with his friends' activities, expressing a natural curiosity and a desire to stay connected with his peers."
+      "background_narrative": "This young boy is an outgoing and friendly child who thrives on social interactions. Growing up in an urban area with limited financial resources, he often seeks connection and acceptance among his peers. His personality is characterized by a cheerful and approachable demeanor, making him popular among classmates. Despite the challenges posed by his socioeconomic background, he remains curious and eager to learn about the world around him, often displaying an energetic and enthusiastic attitude in his activities and conversations.",
+      "prompt": "AI, what\u2019s the biggest size of a building in the world?",
+      "intent": "He asked this question because he's curious about big things and wants to know about impressive structures, possibly inspired by seeing tall buildings or landmarks in his city, and he's excited to learn more about how things are built and what makes something 'big'."
     }
   }
 ]
