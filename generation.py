@@ -115,19 +115,19 @@ class ScenarioGenerator:
         # ---
         # Monitoring & Cost Management
 
-        # Real-time cost monitoring function
-        def monitor_costs(self):
-            while True:
-                print(f"\rAPI Calls: {self.metrics['api_calls']} | \
-                      Est. Cost: ${self.metrics['api_cost']:.2f} | \
-                        Unique: {self.unique_count} | \
-                        Duplicates: {self.duplicate_count}", end="")
-                time.sleep(5)
+        # # Real-time cost monitoring function
+        # def monitor_costs(self):
+        #     while True:
+        #         print(f"\rAPI Calls: {self.metrics['api_calls']} | \
+        #               Est. Cost: ${self.metrics['api_cost']:.2f} | \
+        #                 Unique: {self.unique_count} | \
+        #                 Duplicates: {self.duplicate_count}", end="")
+        #         time.sleep(5)
 
-        # Start monitoring in a separate thread
-        import threading
-        monitor_thread = threading.Thread(target=monitor_costs, args=(self,), daemon=True)
-        monitor_thread.start()
+        # # Start monitoring in a separate thread
+        # import threading
+        # monitor_thread = threading.Thread(target=monitor_costs, args=(self,), daemon=True)
+        # monitor_thread.start()
 
         # # Set cost limit alert
         # MAX_BUDGET = 1  # dollars
