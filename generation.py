@@ -464,10 +464,11 @@ class ScenarioGenerator:
             max_tokens=1024,
             top_p=1
         )
-        self.metrics["api_cost"] += 0.0001 * (len(prompt) / 1000) + 0.0004 * (len(result) / 1000)
 
         result = response.choices[0].message.content.strip()
         print("LLM uniqueness result: "+result)
+        
+        self.metrics["api_cost"] += 0.0001 * (len(prompt) / 1000) + 0.0004 * (len(result) / 1000)
         
         # Track LLM response time
         self.metrics["llm_time"].append(time.time() - start_time)
