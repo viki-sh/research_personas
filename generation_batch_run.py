@@ -54,8 +54,8 @@ config = {
 # %%
 
 # Usage in notebook
-generator = ScenarioGenerator(config)
-generator.run_batch(4)
+# generator = ScenarioGenerator(config)
+# generator.run_batch(4)
 # Analyze the results
 #generator.analyze_results()
 
