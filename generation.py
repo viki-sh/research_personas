@@ -5,7 +5,7 @@ import os
 import time
 import json
 import hashlib
-#import numpy as np
+import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 from tqdm.notebook import tqdm
