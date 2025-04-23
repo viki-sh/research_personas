@@ -900,7 +900,15 @@ def run_agents_2_and_3(scenarios_file_path, timestamp):
     with open(scenarios_file_path, 'r') as f:
         scenarios = json.load(f)
 
-    out_file_path = "full_scenarios_"+timestamp+".json"
+    out_file_path = "output/full_scenarios_"+timestamp+".json"
+    output_scenarios = None
+    full_scenarios_today = list(Path("output").glob("full_scenarios_"+timestamp.split('_')[0]+"_*.json"))
+    for fs_file in full_scenarios_today:
+        with open(fs_file, 'r') as f:
+            if output_scenarios is None:
+                output_scenarios = json.load(f)
+            else:
+                output_scenarios += json.load(f)
     
     logger.info(f"Loaded {len(scenarios)} scenarios from {scenarios_file_path}")
     
@@ -912,6 +920,22 @@ def run_agents_2_and_3(scenarios_file_path, timestamp):
     for scenario in tqdm(scenarios, desc="Processing scenarios"):
         # Skip if already processed
         if "agent2_response" in scenario and "agent3_action" in scenario:
+            continue
+
+        scenario_exists = False
+        if output_scenarios is not None:
+            for o_scenario in output_scenarios:
+                if o_scenario.get('generated_query') == scenario.get('generated_query'):
+                    print('scenario is same')
+                    # Check if this scenario has been fully processed
+                    # if ('agent2_response' in o_scenario and 
+                    #     'agent3_action' in o_scenario):
+                    #     print('fully processed')
+                    #     scenario_exists = True
+                    #     break
+                    scenario_exists = True
+                    break
+        if scenario_exists:
             continue
             
         try:

@@ -54,8 +54,8 @@ config = {
 # %%
 
 # Usage in notebook
-# generator = ScenarioGenerator(config)
-# generator.run_batch(4)
+generator = ScenarioGenerator(config)
+generator.run_batch(1)
 # Analyze the results
 #generator.analyze_results()
 
@@ -70,11 +70,7 @@ if not json_files:
     print("no file found")
         
 latest_json = max(json_files, key=lambda x: x.stat().st_mtime)
-timestamp = latest_json.stem.split('_')[1]
+timestamp = "_".join(latest_json.stem.split('_')[1:])
 
 run_agents_2_and_3(latest_json, timestamp)
-
-# %%
-
-
 
