@@ -8,7 +8,7 @@ import hashlib
 import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
-from tqdm.notebook import tqdm
+#from tqdm.notebook import tqdm
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 #import anthropic
@@ -600,9 +600,10 @@ class ScenarioGenerator:
             else:
                 # Generate embeddings if file doesn't exist
                 console.print("Regenerating embeddings for loaded scenarios...", style="bold yellow")
-                for scenario in tqdm(self.scenarios, desc="Generating embeddings"):
+                for scenario in self.scenarios:
                     embedding = self.get_embedding(scenario)
                     self.scenario_embeddings.append(embedding)
+                    console.print("regenerated embedding")
             
             self.unique_count = len(self.scenarios)
             console.print(f"Loaded {self.unique_count} scenarios from checkpoint", style="bold green")
@@ -917,7 +918,7 @@ def run_agents_2_and_3(scenarios_file_path, timestamp):
     processed = 0
     
     # Process each scenario
-    for scenario in tqdm(scenarios, desc="Processing scenarios"):
+    for scenario in scenarios:
         # Skip if already processed
         if "agent2_response" in scenario and "agent3_action" in scenario:
             continue
