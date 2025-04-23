@@ -874,3 +874,137 @@ class ScenarioGenerator:
 # # # Restore original method if needed
 # # # generator.generate_scenario_text = original_method
 
+def run_agents_2_and_3(scenarios_file_path, timestamp):
+    """
+    Run Agents 2 and 3 on existing scenarios and append their responses to the JSON file.
+    
+    Args:
+        scenarios_file_path: Path to the JSON file containing scenarios
+    """
+    # import json
+    # import os
+    # from tqdm import tqdm
+    # import openai
+    # import time
+    # import logging
+    
+    # Set up logging
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger("agents_runner")
+    
+    # Ensure OpenAI API key is set
+    if "OPENAI_API_KEY" not in os.environ:
+        raise ValueError("OPENAI_API_KEY environment variable is not set")
+    
+    # Load existing scenarios
+    with open(scenarios_file_path, 'r') as f:
+        scenarios = json.load(f)
+
+    out_file_path = "full_scenarios_"+timestamp+".json"
+    
+    logger.info(f"Loaded {len(scenarios)} scenarios from {scenarios_file_path}")
+    
+    # Stats tracking
+    total_cost = 0
+    processed = 0
+    
+    # Process each scenario
+    for scenario in tqdm(scenarios, desc="Processing scenarios"):
+        # Skip if already processed
+        if "agent2_response" in scenario and "agent3_action" in scenario:
+            continue
+            
+        try:
+            # Extract query for Agent 2
+            query = scenario["generated_query"]
+            
+            # Process with Agent 2 (response generation)
+            if "agent2_response" not in scenario:
+                
+                response = openai.chat.completions.create(
+                    model="gpt-4.1-nano",
+                    messages=[{"role": "user", "content": query}],
+                    max_tokens=500,
+                    temperature=0.7
+                )
+                
+                scenario["agent2_response"] = response.choices[0].message.content
+                
+                # Track costs (adjust rates based on actual model used)
+                #prompt_tokens = len(query.split())
+                #completion_tokens = len(scenario["agent2_response"].split())
+                agent2_cost = 0.0001 * (response.usage.prompt_tokens / 1000) + 0.0004 * (response.usage.completion_tokens / 1000)
+                total_cost += agent2_cost
+
+                # Save after each update to prevent data loss
+                with open(out_file_path, 'w') as f:
+                    json.dump(scenarios, f, indent=2)
+                
+                # Add small delay to prevent rate limiting
+                time.sleep(1)
+            
+            # Process with Agent 3 (action prediction)
+            if ("agent3_action" not in scenario) and ("agent2_response" in scenario):
+                psychological_narrative = scenario["psychological_narrative"]
+                agent2_response = scenario["agent2_response"]
+                
+                agent3_prompt = f"""
+                Context: Predict a child's potential action following an AI interaction, focusing on narrative storytelling for parental interpretation.
+
+                Role: You are a Behavioral Consequence Storyteller translating interaction data into a comprehensible narrative.
+
+                Input:
+                1. Intention:
+                {psychological_narrative}
+                2. Generated Query:
+                {query}
+                3. AI Response:
+                {agent2_response}
+
+                Action:
+                Generate a very short description of the child's most likely subsequent action
+                Provide context that a parent would find insightful
+
+                Format: 
+                One succinct description.
+                
+                Target Audience: Parents seeking insight into potential child behaviors
+                """
+                
+                response = openai.chat.completions.create(
+                    model="gpt-4.1-nano",
+                    messages=[{"role": "user", "content": agent3_prompt}],
+                    max_tokens=300,
+                    temperature=0.7
+                )
+                
+                scenario["agent3_action"] = response.choices[0].message.content
+                
+                # Track costs (adjust rates based on actual model used)
+                #prompt_tokens = len(agent3_prompt.split())
+                #completion_tokens = len(scenario["agent3_action"].split())
+                agent3_cost = 0.0001 * (response.usage.prompt_tokens / 1000) + 0.0004 * (response.usage.completion_tokens / 1000)
+                total_cost += agent3_cost
+                
+                # Save after each update to prevent data loss
+                with open(out_file_path, 'w') as f:
+                    json.dump(scenarios, f, indent=2)
+                
+                processed += 1
+                
+                # Add small delay to prevent rate limiting
+                time.sleep(1)
+        
+        except Exception as e:
+            logger.error(f"Error processing scenario: {e}")
+            # Save progress so far
+            with open(out_file_path, 'w') as f:
+                json.dump(scenarios, f, indent=2)
+            # Wait a bit longer in case of rate limiting
+            time.sleep(5)
+    
+    logger.info(f"Processing complete. Processed {processed} new scenarios.")
+    logger.info(f"Total estimated cost: ${total_cost:.2f}")
+    
+    return scenarios
+
