@@ -42,10 +42,10 @@ from generation import run_agents_2_and_3
 config = {
     "embedding_model": "all-MiniLM-L6-v2",  # Lightweight model, good for 16GB RAM
     "similarity_threshold": 0.85,  # Adjust based on desired uniqueness
-    "batch_size": 2,  # Number of scenarios to generate in parallel
+    "batch_size": 10,  # Number of scenarios to generate in parallel
     "max_workers": 4,  # Set to half your CPU count for optimal performance
     "output_dir": "output",
-    "checkpoint_interval": 2,  # Save progress every 25 unique scenarios
+    "checkpoint_interval": 10,  # Save progress every 25 unique scenarios
     #"llm_provider": "openai",  # Change to "openai" if preferred
     "personas": 'k12_combinations.json'
 }
@@ -54,8 +54,8 @@ config = {
 # %%
 
 # Usage in notebook
-generator = ScenarioGenerator(config)
-generator.run_batch(1)
+# generator = ScenarioGenerator(config)
+# generator.run_batch(200)
 # Analyze the results
 #generator.analyze_results()
 
