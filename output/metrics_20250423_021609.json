@@ -1,0 +1,9 @@
+{
+  "unique_scenarios": 70,
+  "duplicate_scenarios": 0,
+  "api_calls": 20,
+  "estimated_cost": 0.011225500000000001,
+  "average_embedding_time": 155.71832765511104,
+  "average_llm_time": 1.5147120237350464,
+  "total_runtime_seconds": 10892.997794389725
+}
